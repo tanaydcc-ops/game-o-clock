@@ -72,7 +72,7 @@ function todayStr() {
 
 function getDateOptions() {
   const today = new Date();
-  return Array.from({ length: 7 }, (_, i) => {
+  return Array.from({ length: 60 }, (_, i) => {
     const d = new Date(today);
     d.setDate(today.getDate() + i);
     const v = d.toISOString().slice(0, 10);
