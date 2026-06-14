@@ -548,6 +548,7 @@ function AdminApp({ bookings, onLogout }) {
   const [toast, setToast] = useState(null);
   const [editBooking, setEditBooking] = useState(null);
   const [editForm, setEditForm] = useState({});
+  const [searchDate, setSearchDate] = useState("");
 
   useEffect(() => {
     if (toast) { const id = setTimeout(() => setToast(null), 2500); return () => clearTimeout(id); }
@@ -628,10 +629,16 @@ function AdminApp({ bookings, onLogout }) {
   const totalDue = bookings.reduce((s, b) => s + ((b.totalPrice || 0) - (b.advancePaid || 0)), 0);
   const totalColl = bookings.reduce((s, b) => s + (b.advancePaid || 0), 0);
 
-  let filtered = bookings;
-  if (filter === "today") filtered = bookings.filter(b => b.date === todayStr());
-  else if (filter === "upcoming") filtered = bookings.filter(b => b.date > todayStr());
-  else if (filter === "due") filtered = bookings.filter(b => statusOf(b) !== "paid");
+  let filtered = bookings.filter(b => b.status !== "cancelled");
+  if (searchDate) {
+    filtered = filtered.filter(b => b.date === searchDate);
+  } else if (filter === "today") {
+    filtered = filtered.filter(b => b.date === todayStr());
+  } else if (filter === "upcoming") {
+    filtered = filtered.filter(b => b.date > todayStr());
+  } else if (filter === "due") {
+    filtered = filtered.filter(b => statusOf(b) !== "paid");
+  }
 
   function BRow({ b }) {
     const isCancelled = b.status === "cancelled";
@@ -748,18 +755,42 @@ function AdminApp({ bookings, onLogout }) {
         {tab === "bookings" && (
           <div>
             <div style={{ fontSize: 15, fontWeight: 700, marginBottom: 10 }}>All bookings</div>
+            
+            {/* Date search */}
+            <div style={{ background: "#fff", borderRadius: 12, padding: "0.875rem 1rem", marginBottom: 12, boxShadow: "0 2px 8px rgba(0,0,0,0.06)", display: "flex", alignItems: "center", gap: 10 }}>
+              <span style={{ fontSize: 16 }}>📅</span>
+              <input type="date" value={searchDate} onChange={e => setSearchDate(e.target.value)}
+                style={{ flex: 1, padding: "8px 10px", border: "1.5px solid #e0e0e0", borderRadius: 8, fontSize: 14, fontFamily: "inherit", color: "#222" }} />
+              {searchDate && (
+                <button onClick={() => setSearchDate("")} style={{
+                  padding: "7px 12px", background: "#f0f0ee", border: "none",
+                  borderRadius: 8, fontSize: 13, cursor: "pointer", fontWeight: 600,
+                }}>✕ Clear</button>
+              )}
+            </div>
+
+            {searchDate && (
+              <div style={{ background: C.lightGreen, border: `1px solid ${C.green}`, borderRadius: 10, padding: "8px 14px", marginBottom: 12, fontSize: 13, color: C.darkGreen, fontWeight: 600 }}>
+                📅 Showing bookings for {searchDate} — {filtered.filter(b => b.date === searchDate).length} booking(s) found
+              </div>
+            )}
+
             <div style={{ display: "flex", gap: 6, marginBottom: 12, flexWrap: "wrap" }}>
               {[["all","All"],["today","Today"],["upcoming","Upcoming"],["due","Has due"]].map(([f,l]) => (
-                <button key={f} onClick={() => setFilter(f)} style={{
+                <button key={f} onClick={() => { setFilter(f); setSearchDate(""); }} style={{
                   padding: "6px 14px", borderRadius: 20, fontSize: 12, cursor: "pointer",
-                  border: `1.5px solid ${filter === f ? C.green : "#e0e0e0"}`,
-                  background: filter === f ? C.lightGreen : "#fff",
-                  color: filter === f ? C.darkGreen : "#888", fontWeight: filter === f ? 700 : 400,
+                  border: `1.5px solid ${filter === f && !searchDate ? C.green : "#e0e0e0"}`,
+                  background: filter === f && !searchDate ? C.lightGreen : "#fff",
+                  color: filter === f && !searchDate ? C.darkGreen : "#888",
+                  fontWeight: filter === f && !searchDate ? 700 : 400,
                 }}>{l}</button>
               ))}
             </div>
             <div style={card}>
-              {filtered.length === 0 ? <p style={{ fontSize: 13, color: "#aaa" }}>No bookings found</p> : filtered.map(b => <BRow key={b.id} b={b} />)}
+              {filtered.length === 0
+                ? <p style={{ fontSize: 13, color: "#aaa" }}>No bookings found</p>
+                : filtered.map(b => <BRow key={b.id} b={b} />)
+              }
             </div>
           </div>
         )}
