@@ -872,7 +872,7 @@ function AdminLogin() {
     setLoading(false);
   }
 
-  const inp = { width: "100%", padding: "11px 12px", border: "1.5px solid #e0e0e0", borderRadius: 10, fontSize: 14, fontFamily: "inherit", marginTop: 6, background: "#fafafa" };
+  const inp = { width: "100%", padding: "11px 12px", border: "1.5px solid #e0e0e0", borderRadius: 10, fontSize: 14, fontFamily: "inherit", marginTop: 6, background: "#fafafa", color: "#222" };
 
   return (
     <div style={{ minHeight: "100vh", background: C.gradHeader, display: "flex", alignItems: "center", justifyContent: "center", fontFamily: "'Segoe UI',system-ui,sans-serif", padding: "16px" }}>
