@@ -760,11 +760,11 @@ function AdminApp({ bookings, onLogout }) {
             <div style={{ background: "#fff", borderRadius: 12, padding: "0.875rem 1rem", marginBottom: 12, boxShadow: "0 2px 8px rgba(0,0,0,0.06)", display: "flex", alignItems: "center", gap: 10 }}>
               <span style={{ fontSize: 16 }}>📅</span>
               <input type="date" value={searchDate} onChange={e => setSearchDate(e.target.value)}
-                style={{ flex: 1, padding: "8px 10px", border: "1.5px solid #e0e0e0", borderRadius: 8, fontSize: 14, fontFamily: "inherit", color: "#222" }} />
+                style={{ flex: 1, padding: "8px 10px", border: "1.5px solid #e0e0e0", borderRadius: 8, fontSize: 14, fontFamily: "inherit", color: "#222", background: "#fff" }} />
               {searchDate && (
                 <button onClick={() => setSearchDate("")} style={{
-                  padding: "7px 12px", background: "#f0f0ee", border: "none",
-                  borderRadius: 8, fontSize: 13, cursor: "pointer", fontWeight: 600,
+                  padding: "7px 12px", background: "#f0f0ee", border: "1px solid #ddd",
+                  borderRadius: 8, fontSize: 13, cursor: "pointer", fontWeight: 600, color: "#333",
                 }}>✕ Clear</button>
               )}
             </div>
