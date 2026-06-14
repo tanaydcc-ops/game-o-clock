@@ -757,16 +757,18 @@ function AdminApp({ bookings, onLogout }) {
             <div style={{ fontSize: 15, fontWeight: 700, marginBottom: 10 }}>All bookings</div>
             
             {/* Date search */}
-            <div style={{ background: "#fff", borderRadius: 12, padding: "0.875rem 1rem", marginBottom: 12, boxShadow: "0 2px 8px rgba(0,0,0,0.06)", display: "flex", alignItems: "center", gap: 10 }}>
-              <span style={{ fontSize: 16 }}>📅</span>
-              <input type="date" value={searchDate} onChange={e => setSearchDate(e.target.value)}
-                style={{ flex: 1, padding: "8px 10px", border: "1.5px solid #e0e0e0", borderRadius: 8, fontSize: 14, fontFamily: "inherit", color: "#222", background: "#fff" }} />
-              {searchDate && (
-                <button onClick={() => setSearchDate("")} style={{
-                  padding: "7px 12px", background: "#f0f0ee", border: "1px solid #ddd",
-                  borderRadius: 8, fontSize: 13, cursor: "pointer", fontWeight: 600, color: "#333",
-                }}>✕ Clear</button>
-              )}
+            <div style={{ background: "#fff", borderRadius: 12, padding: "0.875rem 1rem", marginBottom: 12, boxShadow: "0 2px 8px rgba(0,0,0,0.06)" }}>
+              <div style={{ fontSize: 13, fontWeight: 600, color: "#555", marginBottom: 8 }}>🔍 Search by date</div>
+              <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+                <input type="date" value={searchDate} onChange={e => setSearchDate(e.target.value)}
+                  style={{ flex: 1, padding: "10px 12px", border: "1.5px solid #ccc", borderRadius: 8, fontSize: 14, fontFamily: "inherit", color: "#222", background: "#fff", colorScheme: "light" }} />
+                {searchDate && (
+                  <button onClick={() => setSearchDate("")} style={{
+                    padding: "9px 14px", background: "#f0f0ee", border: "1px solid #ddd",
+                    borderRadius: 8, fontSize: 13, cursor: "pointer", fontWeight: 600, color: "#333",
+                  }}>✕ Clear</button>
+                )}
+              </div>
             </div>
 
             {searchDate && (
