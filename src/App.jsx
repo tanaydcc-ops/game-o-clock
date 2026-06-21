@@ -72,7 +72,7 @@ function todayStr() {
 
 function getDateOptions() {
   const today = new Date();
-  return Array.from({ length: 60 }, (_, i) => {
+  return Array.from({ length: 7 }, (_, i) => {
     const d = new Date(today);
     d.setDate(today.getDate() + i);
     const v = d.toISOString().slice(0, 10);
@@ -143,7 +143,7 @@ function CancelBooking({ allBookings }) {
     setLoading(false);
   }
 
-  const inp = { width: "100%", padding: "10px 12px", border: "1.5px solid #e0e0e0", borderRadius: 10, fontSize: 14, fontFamily: "inherit", marginTop: 4, background: "#fafafa" };
+  const inp = { width: "100%", padding: "10px 12px", border: "1.5px solid #e0e0e0", borderRadius: 10, fontSize: 14, fontFamily: "inherit", marginTop: 4, background: "#fff", color: "#222" };
 
   return (
     <div style={{ marginBottom: 16 }}>
@@ -155,19 +155,19 @@ function CancelBooking({ allBookings }) {
         ✕ Cancel my booking
       </button>
       {open && (
-        <div style={{ background: "#f8f1f1", border: "1.5px solid #FFAB91", borderRadius: 12, padding: "1rem 1.25rem", marginTop: 8 }}>
+        <div style={{ background: "#fff", border: "1.5px solid #FFAB91", borderRadius: 12, padding: "1rem 1.25rem", marginTop: 8 }}>
           <div style={{ fontSize: 14, fontWeight: 700, color: C.red, marginBottom: 12 }}>Cancel a booking</div>
           <div style={{ marginBottom: 10 }}>
-            <label style={{ fontSize: 13, color: "#55555500", fontWeight: 600 }}>📞 Your phone number</label>
+            <label style={{ fontSize: 13, color: "#555", fontWeight: 600 }}>📞 Your phone number</label>
             <input type="tel" placeholder="01XXXXXXXXX" value={phone} onChange={e => setPhone(e.target.value)} style={inp} />
           </div>
           <div style={{ marginBottom: 10 }}>
             <label style={{ fontSize: 13, color: "#555", fontWeight: 600 }}>📆 Booking date</label>
-            <input type="date" value={selDate} onChange={e => setSelDate(e.target.value)} style={inp} />
+            <input type="date" value={selDate} onChange={e => setSelDate(e.target.value)} style={{...inp, colorScheme: "light"}} />
           </div>
           <div style={{ marginBottom: 12 }}>
             <label style={{ fontSize: 13, color: "#555", fontWeight: 600 }}>🕐 Slot</label>
-            <select value={selSlot} onChange={e => setSelSlot(e.target.value)} style={inp}>
+            <select value={selSlot} onChange={e => setSelSlot(e.target.value)} style={{...inp, colorScheme: "light"}}>
               <option value="">Select slot</option>
               {SLOTS.map(s => <option key={s} value={s}>{s}</option>)}
             </select>
