@@ -155,10 +155,10 @@ function CancelBooking({ allBookings }) {
         ✕ Cancel my booking
       </button>
       {open && (
-        <div style={{ background: "#fff", border: "1.5px solid #FFAB91", borderRadius: 12, padding: "1rem 1.25rem", marginTop: 8 }}>
+        <div style={{ background: "#f8f1f1", border: "1.5px solid #FFAB91", borderRadius: 12, padding: "1rem 1.25rem", marginTop: 8 }}>
           <div style={{ fontSize: 14, fontWeight: 700, color: C.red, marginBottom: 12 }}>Cancel a booking</div>
           <div style={{ marginBottom: 10 }}>
-            <label style={{ fontSize: 13, color: "#555", fontWeight: 600 }}>📞 Your phone number</label>
+            <label style={{ fontSize: 13, color: "#55555500", fontWeight: 600 }}>📞 Your phone number</label>
             <input type="tel" placeholder="01XXXXXXXXX" value={phone} onChange={e => setPhone(e.target.value)} style={inp} />
           </div>
           <div style={{ marginBottom: 10 }}>
