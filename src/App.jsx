@@ -125,12 +125,15 @@ function CancelBooking({ allBookings }) {
     if (!phone || !selDate || !selSlot) { setStatus({ type: "error", msg: "Please fill all fields" }); return; }
     setLoading(true);
     const match = allBookings.find(b =>
-      (b.phone === phone || b.phone === "0" + phone.slice(-10)) &&
+      b.source !== "google_sheet" &&
+      (b.phone === phone || 
+       b.phone === "0" + phone.slice(-10) ||
+       (b.name && b.name.toLowerCase().includes(phone.toLowerCase()))) &&
       b.date === selDate && b.slot === selSlot &&
       b.status !== "cancelled"
     );
     if (!match) {
-      setStatus({ type: "error", msg: "No booking found with these details. Please check and try again." });
+      setStatus({ type: "error", msg: "No online booking found with these details. Only bookings made through this website can be cancelled here. Please contact us directly." });
       setLoading(false); return;
     }
     await update(ref(db, `bookings/${match.id}`), {
@@ -158,8 +161,8 @@ function CancelBooking({ allBookings }) {
         <div style={{ background: "#fff", border: "1.5px solid #FFAB91", borderRadius: 12, padding: "1rem 1.25rem", marginTop: 8 }}>
           <div style={{ fontSize: 14, fontWeight: 700, color: C.red, marginBottom: 12 }}>Cancel a booking</div>
           <div style={{ marginBottom: 10 }}>
-            <label style={{ fontSize: 13, color: "#555", fontWeight: 600 }}>📞 Your phone number</label>
-            <input type="tel" placeholder="01XXXXXXXXX" value={phone} onChange={e => setPhone(e.target.value)} style={inp} />
+            <label style={{ fontSize: 13, color: "#555", fontWeight: 600 }}>📞 Your phone number or name</label>
+            <input type="text" placeholder="01XXXXXXXXX or your name" value={phone} onChange={e => setPhone(e.target.value)} style={inp} />
           </div>
           <div style={{ marginBottom: 10 }}>
             <label style={{ fontSize: 13, color: "#555", fontWeight: 600 }}>📆 Booking date</label>
@@ -979,6 +982,8 @@ export default function App() {
   const publicBookings = bookings
     .filter(b => b.status !== "cancelled")
     .map(b => ({ date: b.date, slot: b.slot }));
-  const allBookingsForCancel = bookings.filter(b => b.status !== "cancelled");
+  const allBookingsForCancel = bookings
+    .filter(b => b.status !== "cancelled")
+    .map(b => ({ id: b.id, name: b.name, phone: b.phone, date: b.date, slot: b.slot, status: b.status, source: b.source }));
   return <CustomerApp bookings={publicBookings} allBookings={allBookingsForCancel} />;
 }
