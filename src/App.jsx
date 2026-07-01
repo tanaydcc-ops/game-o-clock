@@ -198,7 +198,7 @@ function CustomerApp({ bookings, allBookings }) {
   const [step, setStep] = useState(1);
   const [selDate, setSelDate] = useState(todayStr());
   const [selSlot, setSelSlot] = useState(null);
-  const [form, setForm] = useState({ name: "", phone: "", area: "", advancePaid: "", totalPrice: "1800" });
+  const [form, setForm] = useState({ name: "", phone: "", area: "", email: "", advancePaid: "", totalPrice: "1800" });
   const [payOpt, setPayOpt] = useState("skip");
   const [toast, setToast] = useState(null);
   const [loading, setLoading] = useState(false);
@@ -216,6 +216,7 @@ function CustomerApp({ bookings, allBookings }) {
     try {
       await push(ref(db, "bookings"), {
         name: form.name.trim(), phone: form.phone.trim(), area: form.area.trim(),
+        email: form.email.trim(),
         date: selDate, slot: selSlot,
         totalPrice: parseInt(form.totalPrice) || 1800,
         advancePaid: payOpt === "pay" ? (parseInt(form.advancePaid) || 0) : 0,
@@ -223,7 +224,7 @@ function CustomerApp({ bookings, allBookings }) {
       });
       setToast("✓ Booking confirmed!");
       setStep(1); setSelSlot(null);
-      setForm({ name: "", phone: "", area: "", advancePaid: "", totalPrice: "1800" });
+      setForm({ name: "", phone: "", area: "", email: "", advancePaid: "", totalPrice: "1800" });
       setPayOpt("skip");
     } catch (e) { setToast("Error saving booking. Please try again."); }
     setLoading(false);
@@ -421,6 +422,7 @@ function CustomerApp({ bookings, allBookings }) {
             {[
               { key: "name", label: "Your name *", ph: "e.g. Jubayer Vai", type: "text", icon: "👤" },
               { key: "phone", label: "Mobile number *", ph: "01XXXXXXXXX", type: "tel", icon: "📞" },
+              { key: "email", label: "Email (for confirmation)", ph: "example@gmail.com", type: "email", icon: "📧" },
               { key: "area", label: "Area / reference", ph: "e.g. Amtola, Silogate", type: "text", icon: "📍" },
             ].map(f => (
               <div key={f.key} style={{ marginBottom: 14 }}>
@@ -496,6 +498,7 @@ function CustomerApp({ bookings, allBookings }) {
                 ["📆 Date", getDateOptions().find(d => d.v === selDate)?.lbl || selDate],
                 ["🕐 Slot", selSlot],
                 ["📞 Phone", form.phone],
+                ["📧 Email", form.email || "—"],
                 ["📍 Area", form.area || "—"],
                 ["💰 Slot price", fmt(parseInt(form.totalPrice) || 1800)],
                 ["💳 Advance paid", payOpt === "pay" && form.advancePaid ? fmt(form.advancePaid) : "Pay at venue"],
