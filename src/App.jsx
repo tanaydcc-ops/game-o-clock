@@ -15,12 +15,14 @@ const BKASH_NUMBER = "01875600258";
 
 function getSlotPrice(dateStr, slotTime) {
   const d = new Date(dateStr);
-  const isFriday = d.getDay() === 5;
+  const day = d.getDay();
+  // Peak days: Thursday (4) and Friday (5)
+  const isPeak = day === 4 || day === 5;
 
   // Extract start hour from slot time
   const startTime = slotTime.split("–")[0].trim();
   const timeParts = startTime.match(/(\d+):(\d+)\s*(AM|PM)/i);
-  if (!timeParts) return isFriday ? 1500 : 1200;
+  if (!timeParts) return isPeak ? 1500 : 1200;
 
   let hour = parseInt(timeParts[1]);
   const period = timeParts[3].toUpperCase();
@@ -28,16 +30,16 @@ function getSlotPrice(dateStr, slotTime) {
   if (period === "PM" && hour !== 12) hour += 12;
   if (period === "AM" && hour === 12) hour = 0;
 
-  // Morning: 6am – 1:30pm (6, 7, 8, 9, 10, 11, 12)
-  if (hour >= 6 && hour < 15) return isFriday ? 1500 : 1200;
-  // Afternoon–Evening: 3pm – 6pm (15, 16, 17)
-  if (hour >= 15 && hour < 18) return isFriday ? 2000 : 1500;
-  // Night: 6pm – 12am (18, 19, 20, 21, 22, 23)
-  if (hour >= 18 && hour < 24) return isFriday ? 2500 : 2000;
-  // Midnight: 12am – 3am (0, 1, 2)
-  if (hour >= 0 && hour < 3) return isFriday ? 2000 : 1800;
+  // Morning: 6am – 3pm
+  if (hour >= 6 && hour < 15) return isPeak ? 1500 : 1200;
+  // Afternoon: 3pm – 4:30pm
+  if (hour === 15) return isPeak ? 2000 : 1500;
+  // Evening–Night: 4:30pm – 12am
+  if (hour >= 16 && hour < 24) return isPeak ? 2500 : 2000;
+  // Midnight: 12am – 3am
+  if (hour >= 0 && hour < 3) return isPeak ? 2000 : 1800;
 
-  return isFriday ? 1500 : 1200;
+  return isPeak ? 1500 : 1200;
 }
 
 const FACILITIES = [
@@ -52,10 +54,10 @@ const FACILITIES = [
 ];
 
 const PRICE_CHART = [
-  { session: "Morning (6am – 1:30pm)", icon: "🌅", weekday: 1200, weekend: 1500 },
-  { session: "Afternoon–Evening (3pm – 6pm)", icon: "☀️", weekday: 1500, weekend: 2000 },
-  { session: "Night (6pm – 12am)", icon: "🌙", weekday: 2000, weekend: 2500 },
-  { session: "Midnight (12am – 3am)", icon: "⭐", weekday: 1800, weekend: 2000 },
+  { session: "Morning (6am – 3pm)", icon: "🌅", offpeak: 1200, peak: 1500 },
+  { session: "Afternoon (3pm – 4:30pm)", icon: "☀️", offpeak: 1500, peak: 2000 },
+  { session: "Evening–Night (4:30pm – 12am)", icon: "🌙", offpeak: 2000, peak: 2500 },
+  { session: "Midnight (12am – 3am)", icon: "⭐", offpeak: 1800, peak: 2000 },
 ];
 
 const TURF_INFO = {
@@ -304,15 +306,15 @@ function CustomerApp({ bookings, allBookings }) {
           </div>
           <div style={{ display: "grid", gridTemplateColumns: "1fr auto auto", gap: "4px 8px" }}>
             <div style={{ fontSize: 11, color: "#aaa", fontWeight: 700, paddingBottom: 6, borderBottom: "1.5px solid #f0f0f0" }}>Session</div>
-            <div style={{ fontSize: 11, color: C.green, fontWeight: 700, textAlign: "center", paddingBottom: 6, borderBottom: "1.5px solid #f0f0f0" }}>Sat–Thu</div>
-            <div style={{ fontSize: 11, color: "#E65100", fontWeight: 700, textAlign: "center", paddingBottom: 6, borderBottom: "1.5px solid #f0f0f0" }}>Friday</div>
+            <div style={{ fontSize: 11, color: C.green, fontWeight: 700, textAlign: "center", paddingBottom: 6, borderBottom: "1.5px solid #f0f0f0" }}>Sat–Wed</div>
+            <div style={{ fontSize: 11, color: "#E65100", fontWeight: 700, textAlign: "center", paddingBottom: 6, borderBottom: "1.5px solid #f0f0f0" }}>Thu–Fri</div>
             {PRICE_CHART.map((p, i) => (
               <>
                 <div key={"s"+i} style={{ fontSize: 12, color: "#444", padding: "6px 0", borderBottom: "0.5px solid #f5f5f5", display: "flex", alignItems: "center", gap: 4 }}>
                   <span>{p.icon}</span> {p.session}
                 </div>
-                <div key={"w"+i} style={{ fontSize: 13, fontWeight: 700, color: C.green, textAlign: "center", padding: "6px 0", borderBottom: "0.5px solid #f5f5f5" }}>৳{p.weekday.toLocaleString()}</div>
-                <div key={"e"+i} style={{ fontSize: 13, fontWeight: 700, color: "#E65100", textAlign: "center", padding: "6px 0", borderBottom: "0.5px solid #f5f5f5" }}>৳{p.weekend.toLocaleString()}</div>
+                <div key={"w"+i} style={{ fontSize: 13, fontWeight: 700, color: C.green, textAlign: "center", padding: "6px 0", borderBottom: "0.5px solid #f5f5f5" }}>৳{p.offpeak.toLocaleString()}</div>
+                <div key={"e"+i} style={{ fontSize: 13, fontWeight: 700, color: "#E65100", textAlign: "center", padding: "6px 0", borderBottom: "0.5px solid #f5f5f5" }}>৳{p.peak.toLocaleString()}</div>
               </>
             ))}
           </div>
