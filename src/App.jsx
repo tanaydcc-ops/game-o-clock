@@ -151,7 +151,34 @@ function Highlights() {
     </div>
   );
 }
+function FacebookFeed() {
+  const pageUrl = "https://www.facebook.com/game0clockbd";
+  const embedSrc = `https://www.facebook.com/plugins/page.php?href=${encodeURIComponent(
+    pageUrl
+  )}&tabs=timeline&width=500&height=700&small_header=false&adapt_container_width=true&hide_cover=false&show_facepile=true`;
 
+  return (
+    <div style={{ background: "#fff", borderRadius: 16, padding: "1rem 1.25rem", marginBottom: 16, boxShadow: "0 2px 12px rgba(0,0,0,0.06)" }}>
+      <div style={{ fontSize: 15, fontWeight: 700, marginBottom: 12, display: "flex", alignItems: "center", gap: 6 }}>
+        <span style={{ background: "#E3F2FD", padding: "4px 8px", borderRadius: 8 }}>📘</span>
+        Latest from Facebook
+      </div>
+      <div style={{ display: "flex", justifyContent: "center", overflow: "hidden", borderRadius: 12 }}>
+        <iframe
+          src={embedSrc}
+          width="500"
+          height="700"
+          style={{ border: "none", overflow: "hidden", maxWidth: "100%" }}
+          scrolling="no"
+          frameBorder="0"
+          allowFullScreen
+          allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share"
+          title="Facebook page feed"
+        />
+      </div>
+    </div>
+  );
+}
 // ─── CUSTOMER CANCEL BOOKING ──────────────────────────────────────
 function CancelBooking({ allBookings }) {
   const [open, setOpen] = useState(false);
@@ -371,6 +398,9 @@ function CustomerApp({ bookings, allBookings }) {
 
         {/* Highlights */}
         <Highlights />
+
+         {/* Facebook feed */} 
+         <FacebookFeed />
 
         {/* Booking section header */}
         <div style={{ background: C.grad, borderRadius: 16, padding: "1rem 1.25rem", marginBottom: 16, textAlign: "center" }}>
