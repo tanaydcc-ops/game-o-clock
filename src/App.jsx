@@ -122,6 +122,36 @@ const C = {
   gradHeader: "linear-gradient(135deg, #0d3b2e 0%, #1a5c44 50%, #1D9E75 100%)",
 };
 
+// ─── HIGHLIGHTS (Facebook video) ──────────────────────────────────
+function Highlights() {
+  const postUrl = "https://www.facebook.com/game0clockbd/posts/pfbid0exY6E7fXyieccHDAehBpwwgzN2NbxTUybz56YmhmywoFvnngr6uM25CQLfkmui9Gl";
+  const embedSrc = `https://www.facebook.com/plugins/post.php?href=${encodeURIComponent(
+    postUrl
+  )}&show_text=true&width=500`;
+
+  return (
+    <div style={{ background: "#fff", borderRadius: 16, padding: "1rem 1.25rem", marginBottom: 16, boxShadow: "0 2px 12px rgba(0,0,0,0.06)" }}>
+      <div style={{ fontSize: 15, fontWeight: 700, marginBottom: 12, display: "flex", alignItems: "center", gap: 6 }}>
+        <span style={{ background: "#E3F2FD", padding: "4px 8px", borderRadius: 8 }}>🎥</span>
+        Highlights
+      </div>
+      <div style={{ display: "flex", justifyContent: "center", overflowX: "auto" }}>
+        <iframe
+          src={embedSrc}
+          width="500"
+          height="740"
+          style={{ border: "none", overflow: "hidden", maxWidth: "100%" }}
+          scrolling="no"
+          frameBorder="0"
+          allowFullScreen
+          allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share"
+          title="Highlights post"
+        />
+      </div>
+    </div>
+  );
+}
+
 // ─── CUSTOMER CANCEL BOOKING ──────────────────────────────────────
 function CancelBooking({ allBookings }) {
   const [open, setOpen] = useState(false);
@@ -338,6 +368,9 @@ function CustomerApp({ bookings, allBookings }) {
             ))}
           </div>
         </div>
+
+        {/* Highlights */}
+        <Highlights />
 
         {/* Booking section header */}
         <div style={{ background: C.grad, borderRadius: 16, padding: "1rem 1.25rem", marginBottom: 16, textAlign: "center" }}>
